@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ElementStructure xmlns="http://www.composite.net/ns/management/trees/treemarkup/1.0" xmlns:f="http://www.composite.net/ns/function/1.0">
+
+	<ElementStructure.AutoAttachments>
+		<NamedParent Name="Media" Position="Bottom" />
+	</ElementStructure.AutoAttachments>
+	<ElementRoot>
+		<Children>
+			<Element Label="Image Watermark Configuration" Id="ImageWatermarks">
+				<Actions>
+					<AddDataAction Type="CkSoftware.ImageWatermark.DataTypes.IWatermarkConfiguration, CkSoftware.ImageWatermark" Label="Add new ImageWatermark Configuration" />
+				</Actions>
+				<Children>
+					<DataElements Type="CkSoftware.ImageWatermark.DataTypes.IWatermarkConfiguration, CkSoftware.ImageWatermark">
+						<Actions>
+							<EditDataAction Label="Edit ImageWatermark Configuration" />
+							<DeleteDataAction Label="Delete ImageWatermark Configuration" />
+						</Actions>
+					</DataElements>
+				</Children>
+			</Element>
+		</Children>
+	</ElementRoot>
+</ElementStructure>

@@ -1,0 +1,67 @@
+﻿<cms:formdefinition xmlns:cms="http://www.composite.net/ns/management/bindingforms/1.0" xmlns="http://www.composite.net/ns/management/bindingforms/std.ui.controls.lib/1.0" xmlns:ff="http://www.composite.net/ns/management/bindingforms/std.function.lib/1.0" xmlns:f="http://www.composite.net/ns/function/1.0">
+  <cms:bindings>
+    <cms:binding name="Id" type="System.Guid" optional="true" />
+    <cms:binding name="Name" type="System.String" optional="true" />
+    <cms:binding name="FontSize" type="System.Int32" optional="true" />
+    <cms:binding name="ShowOnTopLeft" type="System.Boolean" optional="true" />
+    <cms:binding name="ShowOnTopRight" type="System.Boolean" optional="true" />
+    <cms:binding name="ShowOnBottmRight" type="System.Boolean" optional="true" />
+    <cms:binding name="ShowOnBottmLeft" type="System.Boolean" optional="true" />
+    <cms:binding name="WatermarkText" type="System.String" optional="true" />
+    <cms:binding name="WatermarkImageFilePath" type="System.String" optional="true" />
+    <cms:binding name="TargetMediaFolderPath" type="System.String" optional="true" />
+  </cms:bindings>
+  <cms:layout>
+    <cms:layout.label>
+      <cms:read source="Name" />
+    </cms:layout.label>
+    <FieldGroup>
+      <TextBox Label="Name" Help="The name to appear in the tree list." SpellCheck="true">
+        <TextBox.Text>
+          <cms:bind source="Name" />
+        </TextBox.Text>
+      </TextBox>
+      <CheckBox Label="Show watermark at top left corner" Help="">
+        <CheckBox.Checked>
+          <cms:bind source="ShowOnTopLeft" />
+        </CheckBox.Checked>
+      </CheckBox>
+      <CheckBox Label="Show watermark at top right corner" Help="">
+        <CheckBox.Checked>
+          <cms:bind source="ShowOnTopRight" />
+        </CheckBox.Checked>
+      </CheckBox>
+      <CheckBox Label="Show watermark at bottom right corner" Help="">
+        <CheckBox.Checked>
+          <cms:bind source="ShowOnBottmRight" />
+        </CheckBox.Checked>
+      </CheckBox>
+      <CheckBox Label="Show watermark at bottom left corner" Help="">
+        <CheckBox.Checked>
+          <cms:bind source="ShowOnBottmLeft" />
+        </CheckBox.Checked>
+      </CheckBox>
+      <TextBox Label="Watermark Text" Help="Defines the watermark as a simple text." SpellCheck="true">
+        <TextBox.Text>
+          <cms:bind source="WatermarkText" />
+        </TextBox.Text>
+      </TextBox>
+			<TextBox Label="Font size" Help="The font-size, how the watermark text should be rendered.">
+				<TextBox.Text>
+					<cms:bind source="FontSize" />
+				</TextBox.Text>
+			</TextBox>
+			<DataReferenceTreeSelector Label="WatermarkImage" Help="Defines the watermark as a image" Handle="Composite.Management.EmbeddableMediaSelectorDialog" SearchToken="Composite.Plugins.Elements.ElementProviders.MediaFileProviderElementProvider.MediaFileSearchToken,Composite|MimeTypes=null, Extensions=null, Folder=null, HideSubfolders='False', Keyword=null" DataType="Composite.Data.Types.IMediaFile,Composite" NullValueAllowed="true">
+        <DataReferenceTreeSelector.Selected>
+          <cms:bind source="WatermarkImageFilePath" />
+        </DataReferenceTreeSelector.Selected>
+      </DataReferenceTreeSelector>
+      <DataReferenceSelector Label="TargetMediaFolder" Help="The media folder for which the watermark should be used.">
+        <DataReferenceSelector.Selected>
+          <cms:bind source="TargetMediaFolderPath" />
+        </DataReferenceSelector.Selected>
+        <DataReferenceSelector.DataType xmlns="">Composite.Data.Types.IMediaFileFolder, Composite, Version=4.1.5058.34326, Culture=neutral, PublicKeyToken=null</DataReferenceSelector.DataType>
+      </DataReferenceSelector>
+    </FieldGroup>
+  </cms:layout>
+</cms:formdefinition>
