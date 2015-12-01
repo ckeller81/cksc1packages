@@ -7,9 +7,11 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using CkSoftware.ImageWatermark.DataTypes;
 using Composite.Core.WebClient;
 using Composite.Data;
+using Composite.Data.Plugins.DataProvider.Streams;
 using Composite.Data.Types;
 
 namespace CkSoftware.ImageWatermark
@@ -17,6 +19,7 @@ namespace CkSoftware.ImageWatermark
 	public class ImageWatermarkModule : IHttpModule
 	{
 		private const string WatermarkConfigKey = "Watermark_Config";
+		private static readonly TimeSpan CacheExpirationTimeSpan = new TimeSpan(1, 0, 0, 0);
 
 		public void Init(HttpApplication context)
 		{
@@ -102,6 +105,8 @@ namespace CkSoftware.ImageWatermark
 
 		private void WriteWatermarkImageToImage(IWatermarkConfiguration config, Graphics graphic)
 		{
+			IMediaFile originalMediaFile = MediaUrlHelper.GetFileFromQueryString(HttpContext.Current.Request.QueryString);
+
 			IMediaFile imageFile;
 			using (var conn = new DataConnection())
 			{
@@ -111,10 +116,58 @@ namespace CkSoftware.ImageWatermark
 			Image watermarkImage = Image.FromStream(imageFile.GetReadStream());
 			IEnumerable<PointF> positions = GetAllTextPositionByConfigFontAndImage(config, watermarkImage.Size, graphic);
 
+			Size originalImageSize = GetImageSizeFromCacheOrFile(originalMediaFile);
+			float widthRatio = graphic.VisibleClipBounds.Width/originalImageSize.Width;
+			float heightRatio = graphic.VisibleClipBounds.Height/originalImageSize.Height;
+			var watermarkSize = new SizeF(watermarkImage.Width*widthRatio, watermarkImage.Height*heightRatio);
+
 			foreach (PointF position in positions)
 			{
-				graphic.DrawImage(watermarkImage, position);
+				graphic.DrawImage(watermarkImage, position.X, position.Y, watermarkSize.Width, watermarkSize.Height);
 			}
+		}
+
+		/// <summary>
+		/// Thanks to C1 ImageResizer.cs.
+		/// </summary>
+		/// <returns></returns>
+		private Size GetImageSizeFromCacheOrFile(IMediaFile mediaFile)
+		{
+			string imageKey = mediaFile.CompositePath;
+			string imageSizeCacheKey = "ShowMedia.ashx image size " + imageKey;
+			var imageSize = HttpRuntime.Cache.Get(imageSizeCacheKey) as Size?;
+
+			if (imageSize == null)
+			{
+				using (Stream fileStream = mediaFile.GetReadStream())
+				{
+					Size calculatedSize;
+					if (!ImageSizeReader.TryGetSize(fileStream, out calculatedSize))
+					{
+						using (Stream manualFileStream = mediaFile.GetReadStream())
+						{
+							using (var bitmap = new Bitmap(manualFileStream))
+							{
+								calculatedSize = new Size {Width = bitmap.Width, Height = bitmap.Height};
+							}
+						}
+					}
+
+					imageSize = calculatedSize;
+
+					bool isNativeProvider = mediaFile is FileSystemFileBase;
+
+					// We can provider cache dependency only for the native media provider
+					CacheDependency cacheDependency = isNativeProvider
+						? new CacheDependency((mediaFile as FileSystemFileBase).SystemPath)
+						: null;
+
+					HttpRuntime.Cache.Add(imageSizeCacheKey, imageSize, cacheDependency, DateTime.MaxValue, CacheExpirationTimeSpan,
+						CacheItemPriority.Normal, null);
+				}
+			}
+
+			return imageSize.Value;
 		}
 
 		private void WriteWatermarkTextToImage(IWatermarkConfiguration config, Graphics graphic)
