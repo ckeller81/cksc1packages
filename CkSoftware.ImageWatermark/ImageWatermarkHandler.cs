@@ -89,7 +89,7 @@ namespace CkSoftware.ImageWatermark
 
 			var config = (IWatermarkConfiguration) HttpContext.Current.Items[WatermarkConfigKey];
 
-			if (!string.IsNullOrEmpty(config.WatermarkText))
+			if (!string.IsNullOrEmpty(config.WatermarkText) && config.FontSize > 0)
 			{
 				WriteWatermarkTextToImage(config, graphic);
 			}
