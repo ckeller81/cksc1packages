@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <mi:PackageInstaller xmlns:mi="http://www.composite.net/ns/management/packageinstaller/1.0">
 	<mi:PackageRequirements minimumCompositeVersion="4.0.0.0" maximumCompositeVersion="9.9999.9999.9999" />
-	<mi:PackageInformation name="CkSoftware.ImageWatermark" groupName="CkSoftware" version="1.0.0" author="Christoph Keller" website="http://dotnetcorner.ch" readMoreUrl="https://cksc1packages.codeplex.com/" id="cace33d3-993d-45c6-b8ce-9a6c72e10459" canBeUninstalled="true" systemLocking="hard" flushOnCompletion="true" reloadConsoleOnCompletion="true">
+	<mi:PackageInformation name="CkSoftware.ImageWatermark" groupName="CkSoftware" version="1.0.1" author="Christoph Keller" website="http://dotnetcorner.ch" readMoreUrl="https://cksc1packages.codeplex.com/" id="cace33d3-993d-45c6-b8ce-9a6c72e10459" canBeUninstalled="true" systemLocking="hard" flushOnCompletion="true" reloadConsoleOnCompletion="true">
 		<TechnicalDetails>This package adds a HttpModule which intersects each call to the ShowMedia.ashx handler. If a configured watermark is found for the requested media image, the image will be watermarked as configured.</TechnicalDetails>
 		<Description>Enables Composite users to easily Watermark all of their images. The watermarks are configured based on media folders, so you can have multiple configurations with different watermarks. A watermark can be defined as text and / or image and can be placed in each of the images edges.</Description>
 	</mi:PackageInformation>
