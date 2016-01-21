@@ -218,7 +218,7 @@ namespace CkSoftware.ImageWatermark
 			{
 				IWatermarkConfiguration watermarkConfig = GetWatermarkConfigOrDefault(context.Request.QueryString);
 
-				if (watermarkConfig != null)
+				if (watermarkConfig != null && IsWatermarkEnabled(watermarkConfig, context.Request.Url))
 				{
 					var filter = new ResponseFilterStream(context.Response.Filter);
 					filter.TransformStream += AddWatermarkToStream;
@@ -227,6 +227,13 @@ namespace CkSoftware.ImageWatermark
 					context.Items.Add(WatermarkConfigKey, watermarkConfig);
 				}
 			}
+		}
+
+		private bool IsWatermarkEnabled(IWatermarkConfiguration watermarkConfig, Uri requestUrl)
+		{
+			bool haveIgnoreWatermarkQueryString = requestUrl.Query.IndexOf("wm=false", StringComparison.OrdinalIgnoreCase) != -1;
+			return !watermarkConfig.EnableIgnoreWatermarkQueryString ||
+			       (watermarkConfig.EnableIgnoreWatermarkQueryString && !haveIgnoreWatermarkQueryString);
 		}
 
 		private IWatermarkConfiguration GetWatermarkConfigOrDefault(NameValueCollection queryString)

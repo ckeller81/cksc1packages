@@ -57,5 +57,10 @@ namespace CkSoftware.ImageWatermark.DataTypes
 		[ImmutableFieldId("{26E9268F-5BA5-4A6F-AC1C-0990EECFB564}")]
 		[ForeignKey(typeof(IMediaFileFolder), "KeyPath", AllowCascadeDeletes = false, NullReferenceValue = null, NullReferenceValueType = typeof(string))]
 		string TargetMediaFolderPath { get; set; }
+
+		[StoreFieldType(PhysicalStoreFieldType.Boolean)]
+		[ImmutableFieldId("{FC706DE2-BB3C-4DC8-9909-BCBFE178475F}")]
+		[FormRenderingProfile(Label = "Enable Ignore-Watermark-QueryString", HelpText = "If set, every image will accept a query-string parameter 'wm=false'. If this query-string is set, the watermark is not rendered on this image.")]
+		bool EnableIgnoreWatermarkQueryString { get; set; }
 	}
 }
